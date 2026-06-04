@@ -75,7 +75,7 @@ function PendingOrderCard({
   onCancel: () => void;
 }) {
   return (
-    <div className="order-pending-card bg-surface p-4 border border-outline-variant rounded-none transition-all hover:bg-surface-container-low">
+    <div className="bg-surface p-4 border border-outline-variant rounded-none transition-all hover:bg-surface-container-low">
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-outline-variant/30">
         <span className="font-label-md text-label-md text-on-surface-variant font-sans">
           Mã: #{order.code}
@@ -106,14 +106,12 @@ function PendingOrderCard({
       </div>
       <div className="mt-4 pt-4 border-t border-outline-variant/30 flex justify-end gap-3">
         <button
-          type="button"
           onClick={onDetail}
           className="px-6 py-2 border border-primary text-primary font-label-md text-label-md uppercase hover:bg-primary hover:text-white transition-colors font-sans"
         >
           Chi tiết
         </button>
         <button
-          type="button"
           onClick={onCancel}
           className="px-6 py-2 bg-primary text-white font-label-md text-label-md uppercase hover:opacity-90 transition-opacity font-sans"
         >
@@ -131,7 +129,7 @@ export default function OrdersPage() {
   const showPendingList = activeTab === "pending" || activeTab === "all";
 
   useEffect(() => {
-    const cards = document.querySelectorAll(".order-pending-card");
+    const cards = document.querySelectorAll(".bg-surface.p-4");
     const handlers: Array<{ card: Element; start: () => void; end: () => void }> = [];
 
     cards.forEach((card) => {
