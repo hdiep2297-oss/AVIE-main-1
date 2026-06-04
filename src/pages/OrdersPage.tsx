@@ -80,6 +80,26 @@ const INITIAL_ORDERS: OrderItem[] = [
     status: "shipping",
   },
   {
+    id: "d1",
+    code: "AV2408801",
+    price: "225.000đ",
+    imageSrc: "https://i.ibb.co/PG3p6wTs/6.png",
+    title: 'Áo Thun Unisex - 100% COTTON - "Bánh Mì"',
+    color: "Kem",
+    quantity: "01",
+    status: "delivered",
+  },
+  {
+    id: "d2",
+    code: "AV2408755",
+    price: "59.000đ",
+    imageSrc:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAn0i-txvNYeRkVswuPdN3DPUpPe6P3HEDMZ6KdcRpUZ5GS7P0RiU8rIGftOaMjpk18pnbDXMDlVR83LBmozNdnYB7JLliBmza74zxc_FNvNEDGfLUab6tS5aPkdwEvTv4nQLrQqjAFld8Xa7Me9EZH3LM77dTiSR9-J3MTRdXeEVdAPhmXhIIQnDTDj7RCVkqNvZRbkviOyUEbtzUvV2c7o3pfBOC7rFfzkZXH8lHjLyOukXjAy8k3qphaLd-Z6QlRnqRzlo1gw99K56k",
+    title: "Túi Tote Canvas In Hình Tháp Rùa",
+    quantity: "01",
+    status: "delivered",
+  },
+  {
     id: "c1",
     code: "AV-100201",
     price: "225.000đ",
@@ -121,9 +141,11 @@ function tabClass(active: boolean) {
 function ShippingOrderCard({
   order,
   onTrack,
+  onViewReviews,
 }: {
   order: OrderItem;
   onTrack: () => void;
+  onViewReviews: () => void;
 }) {
   return (
     <article className="bg-surface-container rounded-lg border border-outline-variant overflow-hidden">
@@ -149,18 +171,27 @@ function ShippingOrderCard({
             </div>
           </div>
         </div>
-        <div className="pt-4 border-t border-outline-variant flex justify-between items-center">
+        <div className="pt-4 border-t border-outline-variant flex flex-wrap justify-between items-center gap-3">
           <div>
             <p className="font-label-md text-label-md text-on-surface-variant">Tổng tiền</p>
             <p className="font-headline-md text-headline-md text-primary">{order.price}</p>
           </div>
-          <button
-            type="button"
-            onClick={onTrack}
-            className="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md uppercase tracking-widest active:scale-95 transition-transform shadow-sm"
-          >
-            THEO DÕI ĐƠN
-          </button>
+          <div className="flex flex-wrap gap-2 justify-end">
+            <button
+              type="button"
+              onClick={onViewReviews}
+              className="px-4 py-2 border border-primary text-primary font-label-md text-label-md uppercase rounded hover:bg-primary hover:text-on-primary transition-colors active:scale-95"
+            >
+              Xem đánh giá
+            </button>
+            <button
+              type="button"
+              onClick={onTrack}
+              className="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md uppercase tracking-widest active:scale-95 transition-transform shadow-sm"
+            >
+              THEO DÕI ĐƠN
+            </button>
+          </div>
         </div>
       </div>
     </article>
@@ -365,6 +396,7 @@ export default function OrdersPage() {
                     key={order.id}
                     order={order}
                     onTrack={() => navigate("/theo-doi-don-hang")}
+                    onViewReviews={() => navigate("/danh-gia-san-pham")}
                   />
                 );
               }
@@ -490,7 +522,14 @@ function GenericOrderCard({
             <p className="font-headline-md text-headline-md text-primary">{order.price}</p>
           </div>
           {order.status === "pending" && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => onNavigate("/danh-gia-san-pham")}
+                className="px-4 py-2 border border-outline-variant text-on-surface-variant font-label-md text-label-md uppercase rounded hover:border-primary hover:text-primary transition-colors"
+              >
+                Xem đánh giá
+              </button>
               <button
                 type="button"
                 onClick={() => onNavigate("/chi-tiet-don-hang")}
@@ -508,13 +547,22 @@ function GenericOrderCard({
             </div>
           )}
           {order.status === "delivered" && (
-            <button
-              type="button"
-              onClick={() => onNavigate("/danh-gia")}
-              className="bg-secondary text-on-secondary px-6 py-2 rounded font-label-md text-label-md uppercase"
-            >
-              ĐÁNH GIÁ
-            </button>
+            <div className="flex flex-wrap gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => onNavigate("/danh-gia-san-pham")}
+                className="px-4 py-2 border border-primary text-primary font-label-md text-label-md uppercase rounded hover:bg-primary hover:text-on-primary transition-colors"
+              >
+                Xem đánh giá
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate("/danh-gia")}
+                className="bg-secondary text-on-secondary px-6 py-2 rounded font-label-md text-label-md uppercase"
+              >
+                Đánh giá
+              </button>
+            </div>
           )}
         </div>
       </div>
