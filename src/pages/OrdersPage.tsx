@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-type OrderTab = "all" | "pending" | "shipping" | "delivered" | "cancelled";
+type OrderTab = "all" | "pending" | "shipping" | "delivered" | "cancelled" | "to_pickup";
 
 interface PendingOrder {
   code: string;
@@ -15,12 +15,31 @@ interface PendingOrder {
   totalPrice: string;
 }
 
-const TABS: { id: OrderTab; label: string }[] = [
+interface ShippingOrder {
+  code: string;
+  imageSrc: string;
+  imageAlt: string;
+  title: string;
+  quantity: string;
+  color?: string;
+  price: string;
+  totalPrice: string;
+}
+
+const TABS_PENDING = [
   { id: "all", label: "Tất cả" },
   { id: "pending", label: "Chờ xác nhận" },
   { id: "shipping", label: "Đang giao" },
   { id: "delivered", label: "Đã giao" },
   { id: "cancelled", label: "Đã hủy" },
+];
+
+const TABS_SHIPPING = [
+  { id: "all", label: "Tất cả" },
+  { id: "pending", label: "Chờ xác nhận" },
+  { id: "to_pickup", label: "Chờ lấy hàng" },
+  { id: "shipping", label: "Đang giao" },
+  { id: "delivered", label: "Đã giao" },
 ];
 
 const PENDING_ORDERS: PendingOrder[] = [
@@ -59,10 +78,48 @@ const PENDING_ORDERS: PendingOrder[] = [
   },
 ];
 
-function tabLinkClass(active: boolean) {
+const SHIPPING_ORDERS: ShippingOrder[] = [
+  {
+    code: "AV29481",
+    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuCiJIQaGt2qAJBXqi9b_U8QojMAoLzAo4IX3t8BWkDbu_2Hz-XxPYi0e0LdwgMTrQ8Bjx2rfbZCI8Ft3qeFoxfGD0dEwuuU-Nau_WfxKd5Ngs9e4sE5gBDA4uyPco03tKGLhvMk_N2PmsNjk7RcXo1UYHiVYiFttY2cZ0BrfajFsosG-fYl19jMq-6XribpeSxXRuNzX3CAvEOgCuw8XP9CgrOmMNtmc-N4hc6IQwMRLGVGz0F7jjaCGu97wfeeA7MZc7jqqG4WF69MWoU",
+    imageAlt: "Áo Thun Unisex - 100% COTTON - “Bánh Mì”",
+    title: "Áo Thun Unisex - 100% COTTON - “Bánh Mì”",
+    quantity: "Số lượng: 01",
+    color: "Màu sắc: Đen",
+    price: "225.000đ",
+    totalPrice: "225.000đ",
+  },
+  {
+    code: "AV29512",
+    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtx3QYLWai7nh-3-uanIMKyCBuno4Gnj81DYo1lHPN5V3weL-Ndi8G3EZslj4mrc3uqO0Cni-GQLDg6Ew8_4eCc5bWhMIeT8tHf7vlj9Mk5-8LPNbhx7CuLjtkebXf_KKdcu32KwKQSQrylLKG9cQSUWyHdekcaHTYtOMjOpMPnrPfAXV9VEUDTvISmfsdupJRk_VjtxE_mt7ixZ9G1zk14SsH1zysH4F527JfhO5uZSI7HoMM_Kkrrt97rFvuhOoaDgCFzXWGsGSaIps",
+    imageAlt: "Áo Thun Unisex - 100% COTTON - Nón Lá",
+    title: 'Áo Thun Unisex - 100% COTTON - "Nón Lá"',
+    quantity: "Số lượng: 01",
+    color: "Màu sắc: Hồng",
+    price: "225.000đ",
+    totalPrice: "225.000đ",
+  },
+  {
+    code: "AV29600",
+    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuD25mSR0nab7psgUQ0fY-zvj7omQGoi03Y13rI1C2U5oKECYTcbYd6E0sWp-FZXKt2gMgVadife9DEnNoRf60Fp2R3BUrE67hJQHtrs1_LTkmah7nkEqASqApP9wlxY1Vo7AuRJAA2TQQcEGvyV7ZLEGlZVgOYtP3M7Vg62Ooy--lzZe6AEJO8fdaj3picqldskAv6GyLDnRalIKc8rUoEENHdS1kDcN9XRSB2AVwF4vubrOYR7Qb38MLoimyVERTOOF6QVdK3xDW2ue4s",
+    imageAlt: "Túi Tote Canvas In Hình Việt Nam",
+    title: "Túi Tote Canvas In Hình Việt Nam",
+    quantity: "Số lượng: 01",
+    price: "59.000đ",
+    totalPrice: "59.000đ",
+  },
+];
+
+function tabLinkClassPending(active: boolean) {
   return active
     ? "text-secondary border-b-2 border-secondary h-full flex items-center font-label-md text-label-md uppercase tracking-wider whitespace-nowrap font-sans"
     : "text-on-surface-variant font-label-md text-label-md uppercase tracking-wider whitespace-nowrap font-sans";
+}
+
+function tabLinkClassShipping(active: boolean) {
+  return active
+    ? "px-4 py-1 text-secondary font-label-md text-label-md relative after:absolute after:bottom-[-12px] after:left-0 after:w-full after:h-[2px] after:bg-secondary"
+    : "px-4 py-1 text-on-surface-variant font-label-md text-label-md hover:opacity-80";
 }
 
 function PendingOrderCard({
@@ -122,6 +179,58 @@ function PendingOrderCard({
   );
 }
 
+function ShippingOrderCard({
+  order,
+  onTrack,
+}: {
+  order: ShippingOrder;
+  onTrack: () => void;
+}) {
+  return (
+    <article className="bg-surface-container rounded-lg border border-outline-variant overflow-hidden">
+      <div className="p-4 flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <span className="font-label-md text-label-md text-on-surface-variant">MÃ ĐƠN: #{order.code}</span>
+          <span className="font-label-md text-label-md text-secondary font-bold tracking-wider">ĐANG GIAO</span>
+        </div>
+        <div className="flex gap-4">
+          <div className="w-24 h-24 bg-surface-container-highest rounded border border-outline-variant flex-shrink-0">
+            <img alt={order.imageAlt} className="w-full h-full object-cover" src={order.imageSrc} />
+          </div>
+          <div className="flex-grow flex flex-col justify-between">
+            <div>
+              <h3 className="font-body-md text-body-md font-bold text-on-surface">{order.title}</h3>
+              <p className="font-label-md text-label-md text-on-surface-variant mt-1">{order.quantity}</p>
+              {order.color && <div className="">{order.color}</div>}
+              {order.color ? (
+                <>
+                  <p></p>
+                  <p></p>
+                </>
+              ) : null}
+            </div>
+            <div className="text-right">
+              <span className="font-body-md text-body-md text-secondary font-semibold">{order.price}</span>
+            </div>
+          </div>
+        </div>
+        <div className="pt-4 border-t border-outline-variant flex justify-between items-center">
+          <div>
+            <p className="font-label-md text-label-md text-on-surface-variant">Tổng tiền</p>
+            <p className="font-headline-md text-headline-md text-primary">{order.totalPrice}</p>
+          </div>
+          <button 
+            onClick={onTrack}
+            className="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md uppercase tracking-widest active:scale-95 transition-transform shadow-sm"
+          >
+            THEO DÕI ĐƠN
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function OrdersPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("pending");
@@ -129,7 +238,7 @@ export default function OrdersPage() {
   const showPendingList = activeTab === "pending" || activeTab === "all";
 
   useEffect(() => {
-    const cards = document.querySelectorAll(".bg-surface.p-4");
+    const cards = document.querySelectorAll(".bg-surface.p-4, article");
     const handlers: Array<{ card: Element; start: () => void; end: () => void }> = [];
 
     cards.forEach((card) => {
@@ -158,6 +267,110 @@ export default function OrdersPage() {
       alert(`Đơn hàng #${code} đã được hủy.`);
     }
   };
+
+  if (activeTab === "shipping") {
+    return (
+      <div className="bg-background text-on-background min-h-screen flex flex-col font-sans">
+        {/* TopAppBar */}
+        <header className="docked full-width top-0 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flex items-center px-container-padding w-full h-16 z-40 sticky justify-between">
+          <div className="flex items-center w-12 justify-start">
+            <button 
+              type="button"
+              className="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 transition-transform"
+              onClick={() => navigate("/tim-kiem")}
+            >
+              <span className="material-symbols-outlined">search</span>
+            </button>
+          </div>
+          <h1 className="absolute left-1/2 -translate-x-1/2 font-headline-lg-mobile text-headline-lg-mobile tracking-tight text-primary dark:text-primary-fixed w-max flex items-center justify-center">
+            <img 
+              alt="AoVie Logo" 
+              className="object-contain mx-auto h-8" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL2jCIqw8BEpkrE79bfxIWss5TaiX9SVcBOxJjCu-ldSXuMTW-Hk-SS2M0ULJCgnenVS7WFimJ94pvMvYsgBJPgwCw7qALwJr6OiAqWc12cB5JbqVH-JQJRp01snyWl2j2V6iYwzS2Xgav6328MTzP6sytgrROqK47OW8M3Hgm1urFK49LfSfgWEFhp7bwA9gklKgI5JD-phr4yCgBqpL1D3JfnbTaBTtTmGKiSY9FmuxfsN0K75QpfUWjZ5V08PJMCJwt4o5ZZ9_h-h0"
+            />
+          </h1>
+          <div className="flex items-center gap-4 justify-end">
+            <button 
+              type="button"
+              className="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 transition-transform"
+              onClick={() => navigate("/thanh-toan")}
+            >
+              <span className="material-symbols-outlined">shopping_bag</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Tab Navigation */}
+        <div className="bg-surface sticky top-16 z-30 overflow-x-auto border-b border-outline-variant">
+          <div className="flex whitespace-nowrap px-container-padding py-3">
+            {TABS_SHIPPING.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as OrderTab)}
+                className={tabLinkClassShipping(activeTab === tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <main className="flex-grow p-container-padding space-y-4 mb-20">
+          {SHIPPING_ORDERS.map((order) => (
+            <ShippingOrderCard
+              key={order.code}
+              order={order}
+              onTrack={() => navigate("/theo-doi-don-hang")}
+            />
+          ))}
+        </main>
+
+        {/* BottomNavBar */}
+        <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-gutter bg-surface dark:bg-inverse-surface border-t border-outline-variant z-50">
+          <Link
+            className="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors py-1 flex-1"
+            to="/trang-chu"
+          >
+            <span className="material-symbols-outlined">home</span>
+            <span className="font-label-md text-label-md">Trang chủ</span>
+          </Link>
+          <Link
+            className="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors py-1 flex-1"
+            to="/danh-muc"
+          >
+            <span className="material-symbols-outlined">grid_view</span>
+            <span className="font-label-md text-label-md">Danh mục</span>
+          </Link>
+          <Link
+            className="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed py-1 flex-1 transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-highest relative"
+            to="/don-hang"
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+              receipt_long
+            </span>
+            <span className="font-label-md text-label-md">Đơn hàng</span>
+            <div className="absolute bottom-0 w-1 h-1 bg-secondary dark:bg-secondary-fixed rounded-full"></div>
+          </Link>
+          <Link
+            className="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors py-1 flex-1"
+            to="/thong-bao"
+          >
+            <span className="material-symbols-outlined">notifications</span>
+            <span className="font-label-md text-label-md">Thông báo</span>
+          </Link>
+          <Link
+            className="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors py-1 flex-1"
+            to="/toi"
+          >
+            <span className="material-symbols-outlined">person</span>
+            <span className="font-label-md text-label-md">Tôi</span>
+          </Link>
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -192,12 +405,12 @@ export default function OrdersPage() {
         {/* Sticky Order Tabs */}
         <div className="sticky top-16 z-40 bg-surface border-b border-outline-variant overflow-x-auto hide-scrollbar">
           <nav className="flex px-4 space-x-8 min-w-max h-12 items-center">
-            {TABS.map((tab) => (
+            {TABS_PENDING.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={tabLinkClass(activeTab === tab.id)}
+                onClick={() => setActiveTab(tab.id as OrderTab)}
+                className={tabLinkClassPending(activeTab === tab.id)}
               >
                 {tab.label}
               </button>
