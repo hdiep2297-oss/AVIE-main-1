@@ -38,7 +38,7 @@ export default function FilterPage() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col">
+    <div className="filter-page bg-background text-on-background min-h-screen flex flex-col">
       {/* Top App Bar (Header) */}
       <header className="bg-surface sticky top-0 z-50 border-b border-outline-variant flex items-center justify-between px-container-padding h-16 w-full max-w-screen-xl mx-auto">
         <div className="flex items-center gap-4">

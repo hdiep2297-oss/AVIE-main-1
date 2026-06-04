@@ -75,7 +75,7 @@ function PendingOrderCard({
   onCancel: () => void;
 }) {
   return (
-    <div className="bg-surface p-4 border border-outline-variant rounded-none transition-all hover:bg-surface-container-low">
+    <div className="order-pending-card bg-surface p-4 border border-outline-variant rounded-none transition-all hover:bg-surface-container-low">
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-outline-variant/30">
         <span className="font-label-md text-label-md text-on-surface-variant font-sans">
           Mã: #{order.code}
@@ -131,7 +131,7 @@ export default function OrdersPage() {
   const showPendingList = activeTab === "pending" || activeTab === "all";
 
   useEffect(() => {
-    const cards = document.querySelectorAll(".bg-surface.p-4");
+    const cards = document.querySelectorAll(".order-pending-card");
     const handlers: Array<{ card: Element; start: () => void; end: () => void }> = [];
 
     cards.forEach((card) => {
@@ -163,7 +163,7 @@ export default function OrdersPage() {
 
   return (
     <div
-      className="bg-background text-on-background min-h-screen flex flex-col font-sans"
+      className="orders-pending-page bg-background text-on-background min-h-screen flex flex-col font-sans"
       style={{ WebkitTapHighlightColor: "transparent" }}
     >
       {/* TopAppBar */}
