@@ -102,7 +102,10 @@ export default function CategoryPage() {
   });
 
   return (
-    <div className="bg-background text-on-surface min-h-screen flex flex-col font-sans relative antialiased select-none pb-24">
+    <div 
+      className="bg-background text-on-surface flex flex-col min-h-screen relative antialiased pb-24"
+      style={{ fontFamily: '"Be Vietnam Pro", sans-serif' }}
+    >
       <GrainTexture />
 
       {/* TopAppBar */}
@@ -112,7 +115,7 @@ export default function CategoryPage() {
             onClick={() => navigate("/tim-kiem")}
             className="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200"
           >
-            <span className="material-symbols-outlined text-primary">search</span>
+            <span className="material-symbols-outlined text-primary" data-icon="search">search</span>
           </button>
           
           <img 
@@ -126,7 +129,7 @@ export default function CategoryPage() {
             onClick={() => navigate("/thanh-toan")}
             className="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200 relative"
           >
-            <span className="material-symbols-outlined text-primary">shopping_bag</span>
+            <span className="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
             <span className="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">2</span>
           </button>
         </div>
@@ -134,14 +137,16 @@ export default function CategoryPage() {
 
       {/* Sub-Header & Filters */}
       <section className="px-container-padding pt-6 pb-4 bg-background">
+        <div className="flex flex-col gap-1 mb-4">
+        </div>
         {/* Category Chips */}
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-container-padding px-container-padding no-scrollbar scroll-smooth">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-container-padding px-container-padding no-scrollbar">
           <button 
             onClick={() => setSelectedCategory("all")}
-            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap ${
               selectedCategory === "all" 
                 ? "bg-primary text-on-primary" 
-                : "border border-outline text-primary hover:bg-surface-variant/30"
+                : "border border-outline text-primary"
             }`}
           >
             Tất cả
@@ -149,10 +154,10 @@ export default function CategoryPage() {
           
           <button 
             onClick={() => setSelectedCategory("ÁO")}
-            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap ${
               selectedCategory === "ÁO" 
                 ? "bg-primary text-on-primary" 
-                : "border border-outline text-primary hover:bg-surface-variant/30"
+                : "border border-outline text-primary"
             }`}
           >
             Áo thun
@@ -160,10 +165,10 @@ export default function CategoryPage() {
           
           <button 
             onClick={() => setSelectedCategory("TÚI")}
-            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 font-label-md text-label-md rounded-[2px] uppercase whitespace-nowrap ${
               selectedCategory === "TÚI" 
                 ? "bg-primary text-on-primary" 
-                : "border border-outline text-primary hover:bg-surface-variant/30"
+                : "border border-outline text-primary"
             }`}
           >
             Túi
@@ -173,7 +178,7 @@ export default function CategoryPage() {
 
       {/* Main Content: Product Grid */}
       <main className="flex-grow px-container-padding pb-24">
-        <div className="grid grid-cols-2 gap-x-gutter gap-y-8 max-w-screen-xl mx-auto">
+        <div className="grid grid-cols-2 gap-x-gutter gap-y-8">
           {filteredProducts.map((product) => (
             <div 
               key={product.id}
@@ -188,7 +193,7 @@ export default function CategoryPage() {
                 />
                 <button 
                   onClick={(e) => handleAddClick(e, product)}
-                  className="absolute bottom-2 right-2 w-8 h-8 bg-surface/90 flex items-center justify-center rounded-full md:opacity-0 group-hover:opacity-100 transition-opacity active:scale-90"
+                  className="absolute bottom-2 right-2 w-8 h-8 bg-surface/90 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   {addedStates[product.id] ? (
                     <span 
@@ -198,7 +203,7 @@ export default function CategoryPage() {
                       check_circle
                     </span>
                   ) : (
-                    <span className="material-symbols-outlined text-[18px] text-primary">add</span>
+                    <span className="material-symbols-outlined text-[18px] text-primary" data-icon="add">add</span>
                   )}
                 </button>
               </div>
@@ -235,9 +240,9 @@ export default function CategoryPage() {
       {/* Floating Filter Button */}
       <button 
         onClick={() => navigate("/bo-loc")}
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-[#5d4037] text-on-primary px-6 py-3 rounded-full shadow-lg flex items-center gap-2 z-40 active:scale-95 transition-transform hover:opacity-95"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-[#5d4037] text-on-primary px-6 py-3 rounded-full shadow-lg flex items-center gap-2 z-40 active:scale-95 transition-transform"
       >
-        <span className="material-symbols-outlined text-[20px]">tune</span>
+        <span className="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
         <span className="font-label-md text-label-md uppercase tracking-wider">Lọc &amp; Sắp xếp</span>
       </button>
 
@@ -247,9 +252,9 @@ export default function CategoryPage() {
           {/* Trang chủ */}
           <button 
             onClick={() => navigate("/trang-chu")}
-            className="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-colors active:scale-90 transition-transform"
+            className="flex flex-col items-center justify-center text-on-surface-variant transition-colors active:scale-90 transition-transform"
           >
-            <span className="material-symbols-outlined text-[24px]">home</span>
+            <span className="material-symbols-outlined text-[24px]" data-icon="home">home</span>
             <span className="font-medium text-[10px]">Trang chủ</span>
           </button>
           
@@ -260,6 +265,7 @@ export default function CategoryPage() {
           >
             <span 
               className="material-symbols-outlined text-[24px]" 
+              data-icon="category"
               style={{ color: "rgb(93, 64, 55)", fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
             >
               grid_view
@@ -271,27 +277,27 @@ export default function CategoryPage() {
           {/* Đơn hàng */}
           <button 
             onClick={() => navigate("/don-hang")}
-            className="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-colors active:scale-90 transition-transform"
+            className="flex flex-col items-center justify-center text-on-surface-variant transition-colors active:scale-90 transition-transform"
           >
-            <span className="material-symbols-outlined text-[24px]">receipt_long</span>
+            <span className="material-symbols-outlined text-[24px]" data-icon="receipt_long">receipt_long</span>
             <span className="font-medium text-[10px]">Đơn hàng</span>
           </button>
           
           {/* Thông báo */}
           <button 
             onClick={() => navigate("/thong-bao")}
-            className="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-colors active:scale-90 transition-transform"
+            className="flex flex-col items-center justify-center text-on-surface-variant transition-colors active:scale-90 transition-transform"
           >
-            <span className="material-symbols-outlined text-[24px]">notifications</span>
+            <span className="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
             <span className="font-medium text-[10px]">Thông báo</span>
           </button>
           
           {/* Tôi */}
           <button 
             onClick={() => navigate("/toi")}
-            className="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-colors active:scale-90 transition-transform"
+            className="flex flex-col items-center justify-center text-on-surface-variant transition-colors active:scale-90 transition-transform"
           >
-            <span className="material-symbols-outlined text-[24px]">person</span>
+            <span className="material-symbols-outlined text-[24px]" data-icon="person">person</span>
             <span className="font-medium text-[10px]">Tôi</span>
           </button>
         </div>
